@@ -1,0 +1,3 @@
+﻿simulateModel("VirtualTestbed.NISTChillerTestbed.Component.BaseClasses.Examples.LMTDs", stopTime=7200, resultFile="LMTDs");
+createPlot(id=1, position={0, 0, 1645, 640}, y={"lmtdSta.lmtd"},grid=true,subPlot=1, colors={{28,108,200}});
+createPlot(id=1, position={0, 0, 1645, 640}, y={"Tin.y","Tout.y"},grid=true,subPlot=2, colors={{28,108,200},{238,46,47}});
