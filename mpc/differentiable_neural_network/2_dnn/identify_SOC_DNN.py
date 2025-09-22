@@ -192,6 +192,16 @@ print("mean_test:",mean_test,"MSE_test:",MSE_test,"RMSE_test",RMSE_test)
 print("NMBE_test:",MSE_test/mean_test/(len(data)*0.2-1))
 print("CV(RMSE)_test:",RMSE_test/mean_test)
 
+# Set Global Font Size
+plt.rcParams.update({
+    'font.size': 14,              # General font size
+    'axes.titlesize': 16,         # Axes title
+    'axes.labelsize': 12,         # Axes labels
+    'xtick.labelsize': 12,        # X tick labels
+    'ytick.labelsize': 12,        # Y tick labels
+    'legend.fontsize': 12,        # Legend
+    'figure.titlesize': 18        # Figure title
+})
 
 ## Scatter plot of training and testing results
 plt.figure(figsize=(14, 6))
@@ -231,7 +241,7 @@ plt.show()
 
 
 ## Error plot
-plt.figure()
+plt.figure(figsize=(12, 5))
 # plt.subplot(311)
 # plt.plot(y_train,'b-',lw=0.5,label='Target in Training')
 # plt.plot(y_pred_train,'r--',lw=0.5,markevery=0.05,marker='o',markersize=2,label='Prediction in Training')
@@ -239,18 +249,20 @@ plt.figure()
 # plt.legend(loc='upper right')
 
 plt.subplot(211)
-plt.plot(y_test,'b-',lw=0.5,label='Target in Testing')
-plt.plot(y_pred_test,'r--',lw=0.5,markevery=0.05,marker='o',markersize=2,label='Prediction in Testing')
+plt.plot(y_test,'b-',lw=0.5,label='True')
+plt.plot(y_pred_test,'r--',lw=0.5,markevery=0.05,marker='o',markersize=2,label='Prediction')
 plt.ylabel('State-of-Charge')
-plt.legend(loc='upper right')
-plt.title('Trained NN model with RMSE = {:.2f} and CVRMSE = {:.2f}%'.format(RMSE_test, RMSE_test/mean_test*100), fontsize=14)
+plt.legend(loc='upper left')
+plt.title('Single-step-prediction Testing Results (RMSE = {:.2f} and CVRMSE = {:.2f}%)'.format(RMSE_test, RMSE_test/mean_test*100), fontsize=16)
 
 plt.subplot(212)
-plt.plot(y_pred_test-y_test.flatten(), 'b-', label='Prediction Errors in Testing')
+plt.plot(y_pred_test-y_test.flatten(), 'b-', label='Prediction Errors')
 plt.ylabel('Relative Error')
-plt.legend(loc='upper right')
+plt.ylim(-0.3,0.3)
+plt.xlabel('Sample Index (hourly data)')
+plt.legend(loc='upper left')
 
-plt.savefig('./results_dnn/SOC_error.png')
+plt.savefig('./results_dnn/SOC_error.png', dpi=500, bbox_inches='tight')
 plt.show()
 
 

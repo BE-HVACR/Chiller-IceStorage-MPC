@@ -104,6 +104,17 @@ def zone_temp_DNN(data, features, target, zonNam):
     r2_test = r2_score(y_test, y_pred_test)
     mse_test = mean_squared_error(y_test, y_pred_test)
     
+        # Set Global Font Size
+    plt.rcParams.update({
+        'font.size': 14,              # General font size
+        'axes.titlesize': 16,         # Axes title
+        'axes.labelsize': 12,         # Axes labels
+        'xtick.labelsize': 12,        # X tick labels
+        'ytick.labelsize': 12,        # Y tick labels
+        'legend.fontsize': 12,        # Legend
+        'figure.titlesize': 18        # Figure title
+    })
+    
     print("\n========Results of Model Training for:",zonNam,"zone temperature:========")
     # Define the diagonal line (1:1 line)
     min_val = min(min(y_train), min(y_test))  # Get the minimum value from both sets
@@ -173,7 +184,7 @@ def zone_temp_DNN(data, features, target, zonNam):
     print("CV(RMSE)_test:",RMSE_test/mean_test)
 
     # plot
-    plt.figure()
+    plt.figure(figsize=(12, 5))
     # plt.subplot(311)
     # plt.plot(y_train,'b-',lw=0.5,label='Target in Training')
     # plt.plot(y_pred_train,'r--',lw=0.5,markevery=0.05,marker='o',markersize=2,label='Prediction in Training')
@@ -181,19 +192,21 @@ def zone_temp_DNN(data, features, target, zonNam):
     # plt.legend(loc='upper right')
 
     plt.subplot(211)
-    plt.plot(y_test,'b-',lw=0.5,label='Target in Testing')
-    plt.plot(y_pred_test,'r--',lw=0.5,markevery=0.05,marker='o',markersize=2,label='Prediction in Testing')
+    plt.plot(y_test,'b-',lw=0.5,label='True')
+    plt.plot(y_pred_test,'r--',lw=0.5,markevery=0.05,marker='o',markersize=2,label='Prediction')
     plt.ylabel('Temperature(°C)')
-    plt.legend(loc='upper right')
-    plt.title('Trained NN model with RMSE = {:.3f}°C'.format(RMSE_test))
+    plt.legend(loc='upper left')
+    plt.title('Single-step-prediction Testing Results (RMSE = {:.3f}°C)'.format(RMSE_test), fontsize=16)
 
     plt.subplot(212)
-    plt.plot(y_pred_test-y_test.flatten(), 'b-', label='Prediction Errors in Testing')
-    plt.ylabel('Error(°C)')
+    plt.plot(y_pred_test-y_test.flatten(), 'b-', label='Prediction Errors')
+    plt.ylabel('Relative Error(°C)')
+    plt.ylim(-5,5)
+    plt.xlabel('Sample Index (hourly data)')
     #plt.title('Prediction Errors in Testing')
-    plt.legend(loc='upper right')
+    plt.legend(loc='upper left')
 
-    plt.savefig('./results_dnn/Tz_'+str(zonNam)+'_Tset24_DNN_error.png')
+    plt.savefig('./results_dnn/Tz_'+str(zonNam)+'_Tset24_DNN_error.png', dpi=500, bbox_inches='tight')
     plt.show()
 
     # history stores the loss/val in each epoch
@@ -253,7 +266,7 @@ def open_loop_zone_temp_DNN(model_path, data, features, target, updated_var_name
     updated_var_index = features.index(updated_var_name)
 
     # Determine dataset split point
-    split_point = int(0.5 * len(X))  # 80% split
+    split_point = int(0.80 * len(X))  # 80% split
     x_train, x_test = X[:split_point], X[split_point:]
     y_train, y_test = Y[:split_point], Y[split_point:]
 
@@ -262,7 +275,7 @@ def open_loop_zone_temp_DNN(model_path, data, features, target, updated_var_name
     steps_per_day = int(24*3600/timestep)  # Number of steps for one day (288 for 5-minute intervals, 24 for 1-hour intervals)
 
     # Total steps for multi-day testing
-    total_steps = int(num_days * steps_per_day)
+    total_steps = int(num_days * steps_per_day) + 1
 
     # Start testing from a given day
     start_step = int(steps_per_day * start_day)
@@ -308,27 +321,39 @@ def open_loop_zone_temp_DNN(model_path, data, features, target, updated_var_name
     print(f"Open-loop RMSE: {rmse_open_loop:.3f}°C")
     print(f"Open-loop CV(RMSE): {cvrmse_open_loop:.2f}%")
     print(f"Open-loop R2: {r2_open_loop:.2f}")
+    
+    # Set Global Font Size
+    plt.rcParams.update({
+        'font.size': 14,              # General font size
+        'axes.titlesize': 16,         # Axes title
+        'axes.labelsize': 12,         # Axes labels
+        'xtick.labelsize': 12,        # X tick labels
+        'ytick.labelsize': 12,        # Y tick labels
+        'legend.fontsize': 12,        # Legend
+        'figure.titlesize': 18        # Figure title
+    })
 
     # Plot the results with multi-day hourly intervals on the x-axis
-    plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(12, 5))
 
     # Create x-axis labels for each hour across the total testing period
     total_hours = total_steps // steps_per_hour  # Total number of hours for the testing period
-    hourly_indices = np.arange(0, total_steps, steps_per_hour)  # Indices for plotting hourly points
+    hourly_indices = np.arange(0, total_steps, 2*steps_per_hour)  # Indices for plotting hourly points
     hour_labels = np.arange(total_hours)  # Labels for hours
 
     # Plot the true and predicted values
     plt.plot(y_true, label='True', marker='o', markersize=3)
-    plt.plot(y_open_loop, label='Predicted (Open-loop)', linestyle='--', marker='x', markersize=3)
+    plt.plot(y_open_loop, label='Prediction', linestyle='--', marker='x', markersize=3)
 
     # Set the x-axis to display hourly intervals across multiple days
-    plt.xticks(hourly_indices, hour_labels)
+    plt.xticks(hourly_indices) #, hour_labels
     plt.xlabel('Time (Hours)')
     plt.ylabel('Temperature (°C)')
-    plt.title(f'Open-loop Testing Results (RMSE={rmse_open_loop:.2f}°C, R2={r2_open_loop:.2f})')
-    plt.legend()
-    plt.grid(True)
-    plt.savefig('./results_dnn//open_loop_test_'+str(zonNam)+'_zone.png')
+    plt.title(f'Multi-step-prediction Testing Results (RMSE={rmse_open_loop:.3f}°C)', fontsize=16) #, R2={r2_open_loop:.2f}
+    plt.legend(loc='upper left')
+    #plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('./results_dnn//open_loop_test_'+str(zonNam)+'_zone.png', dpi=500)
 
     # Show the plot
     plt.show()
