@@ -2,7 +2,7 @@ within VirtualTestbed.NISTChillerTestbed.System.FakeSystem;
 model Baseline
   "Variable air volume flow system with terminal reheat and five thermal zones"
   extends Modelica.Icons.Example;
-  extends FakeSystem.BaseClasses.PartialOpenLoop(
+  extends FakeSystem.BaseClasses.PartialOpenLoopNoWeatherBus(
     cooCoi(m1_flow_nominal=
           m2_flow_chi_nominal, dp1_nominal=100000),
     flo(

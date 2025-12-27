@@ -2,20 +2,6 @@ within VirtualTestbed.NISTChillerTestbed.System.FakeSystem.Validation;
 model Guideline36SteadyState
   "Validation of detailed model that is at steady state with constant weather data"
   extends Baseline(
-    weaDat(
-      pAtmSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      ceiHeiSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      totSkyCovSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      opaSkyCovSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      TDryBulSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      TDewPoiSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      TBlaSkySou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      TBlaSky=293.15,
-      relHumSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      winSpeSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      winDirSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      HInfHorSou=Buildings.BoundaryConditions.Types.DataSource.Parameter,
-      HSou=Buildings.BoundaryConditions.Types.RadiationDataSource.Input_HGloHor_HDifHor),
     use_windPressure=false,
     sampleModel=false,
     flo(gai(K=0*[0.4; 0.4; 0.2])),

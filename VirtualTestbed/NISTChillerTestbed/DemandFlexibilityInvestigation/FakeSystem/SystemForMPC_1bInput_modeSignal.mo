@@ -2,7 +2,7 @@ within VirtualTestbed.NISTChillerTestbed.DemandFlexibilityInvestigation.FakeSyst
 model SystemForMPC_1bInput_modeSignal
   "Variable air volume flow system with terminal reheat and five thermal zones"
   extends Modelica.Icons.Example;
-  extends System.FakeSystem.BaseClasses.PartialOpenLoop(cooCoi(m1_flow_nominal=
+  extends System.FakeSystem.BaseClasses.PartialOpenLoopNoWeatherBus(cooCoi(m1_flow_nominal=
           m2_flow_chi_nominal, dp1_nominal=100000), flo(
       cor(T_start=273.15 + 24),
       sou(T_start=273.15 + 24),
@@ -800,14 +800,18 @@ This is for
 </ul>
 </html>"),
     experiment(
-      StartTime=18316800,
-      StopTime=19526400,
-      __Dymola_Algorithm="Cvode"),
+      StopTime=604800,
+      __Dymola_fixedstepsize=0.01,
+      __Dymola_Algorithm="Euler"),
     Icon(coordinateSystem(extent={{-100,-100},{100,100}}), graphics={
                                         Text(
         extent={{-146,140},{154,100}},
         textString="%name",
         lineColor={0,0,255})}),
     __Dymola_Commands(file="modelica://VirtualTestbed/Resources/scripts/dymola/NISTChillerTestbed/System/FakeSystem/Baseline.mos"
-        "Simulate and Plot"));
+        "Simulate and Plot"),
+    __Dymola_experimentFlags(Advanced(
+        InlineMethod=1,
+        InlineOrder=2,
+        InlineFixedStep=0.01)));
 end SystemForMPC_1bInput_modeSignal;

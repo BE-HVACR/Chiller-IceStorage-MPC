@@ -1,5 +1,5 @@
 within VirtualTestbed.NISTChillerTestbed.System.FakeSystem.BaseClasses;
-partial model PartialOpenLoop
+partial model PartialOpenLoopNoWeatherBus
   "Partial model of variable air volume flow system with terminal reheat and five thermal zones"
 
   package MediumA = Buildings.Media.Air "Medium model for air";
@@ -168,8 +168,8 @@ partial model PartialOpenLoop
     m_flow_nominal=m_flow_nominal,
     allowFlowReversal=allowFlowReversal)
     annotation (Placement(transformation(extent={{330,-50},{350,-30}})));
-  Buildings.Fluid.Sensors.RelativePressure dpDisSupFan(redeclare package Medium =
-        MediumA) "Supply fan static discharge pressure" annotation (Placement(
+  Buildings.Fluid.Sensors.RelativePressure dpDisSupFan(redeclare package Medium
+      = MediumA) "Supply fan static discharge pressure" annotation (Placement(
         transformation(
         extent={{-10,10},{10,-10}},
         rotation=90,
@@ -371,13 +371,6 @@ partial model PartialOpenLoop
          else Modelica.Fluid.Types.PortFlowDirection.Leaving)
     "Splitter for room supply"
     annotation (Placement(transformation(extent={{1090,-30},{1110,-50}})));
-  Buildings.BoundaryConditions.WeatherData.ReaderTMY3 weaDat(filNam=
-        Modelica.Utilities.Files.loadResource(
-        "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"))
-    annotation (Placement(transformation(extent={{-360,170},{-340,190}})));
-  Buildings.BoundaryConditions.WeatherData.Bus weaBus "Weather Data Bus"
-    annotation (Placement(transformation(extent={{-330,170},{-310,190}}),
-        iconTransformation(extent={{-360,170},{-340,190}})));
   ThermalZones.Floor flo(
     redeclare final package Medium = MediumA,
     final lat=lat,
@@ -549,6 +542,12 @@ public
   Buildings.Controls.OBC.CDL.Continuous.Sources.Constant freStaTSetPoi(k=273.15
          + 3) "Freeze stat set point for heating coil"
     annotation (Placement(transformation(extent={{-40,-96},{-20,-76}})));
+  dSpaceExample.WeatherTable.Chicago
+                       chicago
+    annotation (Placement(transformation(extent={{-360,138},{-340,158}})));
+  Modelica.Blocks.Sources.RealExpression reaTDryBul(y=chicago.wea.y[7])
+    "Outdoor air dry bulb temperature"
+    annotation (Placement(transformation(extent={{-360,110},{-340,130}})));
 equation
   connect(fanSup.port_b, dpDisSupFan.port_a) annotation (Line(
       points={{320,-40},{320,-10}},
@@ -624,21 +623,6 @@ equation
       color={0,127,255},
       smooth=Smooth.None,
       thickness=0.5));
-  connect(weaDat.weaBus, weaBus) annotation (Line(
-      points={{-340,180},{-320,180}},
-      color={255,204,51},
-      thickness=0.5,
-      smooth=Smooth.None));
-  connect(weaBus.TDryBul, TOut.u) annotation (Line(
-      points={{-320,180},{-302,180}},
-      color={255,204,51},
-      thickness=0.5,
-      smooth=Smooth.None));
-  connect(amb.weaBus, weaBus) annotation (Line(
-      points={{-136,-44.78},{-320,-44.78},{-320,180}},
-      color={255,204,51},
-      thickness=0.5,
-      smooth=Smooth.None));
   connect(splRetRoo1.port_3, flo.portsCor[2]) annotation (Line(
       points={{640,10},{640,364},{874,364},{874,472},{898,472},{898,449.533},{
           924.286,449.533}},
@@ -660,11 +644,6 @@ equation
       points={{1162,0},{1342,0},{1342,394},{854,394},{854,449.533}},
       color={0,127,255},
       thickness=0.5));
-  connect(weaBus, flo.weaBus) annotation (Line(
-      points={{-320,180},{-320,506},{988.714,506}},
-      color={255,204,51},
-      thickness=0.5,
-      smooth=Smooth.None));
   connect(flo.TRooAir, min.u) annotation (Line(
       points={{1094.14,491.333},{1164.7,491.333},{1164.7,450},{1198,450}},
       color={0,0,127},
@@ -801,6 +780,17 @@ equation
       points={{98,-52},{80,-52},{80,-112}},
       color={28,108,200},
       thickness=0.5));
+  connect(chicago.weaBus, amb.weaBus) annotation (Line(
+      points={{-342.2,148.2},{-320,148.2},{-320,-44.78},{-136,-44.78}},
+      color={255,204,51},
+      thickness=0.5));
+  connect(chicago.weaBus, flo.weaBus) annotation (Line(
+      points={{-342.2,148.2},{-320,148.2},{-320,520},{988.714,520},{988.714,506}},
+
+      color={255,204,51},
+      thickness=0.5));
+  connect(reaTDryBul.y, TOut.u) annotation (Line(points={{-339,120},{-328,120},
+          {-328,180},{-302,180}}, color={0,0,127}));
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-380,
             -400},{1420,600}})), Documentation(info="<html>
 <p>
@@ -898,4 +888,4 @@ This is for
 </li>
 </ul>
 </html>"));
-end PartialOpenLoop;
+end PartialOpenLoopNoWeatherBus;
