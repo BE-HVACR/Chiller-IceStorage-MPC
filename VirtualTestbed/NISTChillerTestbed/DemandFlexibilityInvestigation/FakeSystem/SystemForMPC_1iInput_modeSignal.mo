@@ -1,5 +1,5 @@
 within VirtualTestbed.NISTChillerTestbed.DemandFlexibilityInvestigation.FakeSystem;
-model SystemForMPC_1bInput_modeSignal
+model SystemForMPC_1iInput_modeSignal
   "Variable air volume flow system with terminal reheat and five thermal zones"
   extends Modelica.Icons.Example;
   extends System.FakeSystem.BaseClasses.PartialOpenLoopNoWeatherBus(cooCoi(m1_flow_nominal=
@@ -345,8 +345,6 @@ equation
           94},{1032,34},{1038,34}}, color={0,0,127}));
   connect(TSupWes.T, conVAVWes.TDis) annotation (Line(points={{1289,90},{1228,
           90},{1228,32},{1238,32}}, color={0,0,127}));
-  connect(cor.yVAV, conVAVCor.yDam) annotation (Line(points={{566,50},{556,50},{
-          556,48},{552,48}}, color={0,0,127}));
   connect(cor.yVal, conVAVCor.yVal) annotation (Line(points={{566,34},{560,34},{
           560,43},{552,43}}, color={0,0,127}));
   connect(conVAVSou.yDam, sou.yVAV) annotation (Line(points={{722,46},{730,46},{
@@ -705,6 +703,8 @@ equation
   connect(uModActOcc.y, booRep.u) annotation (Line(points={{-259,-232},{-246,
           -232},{-246,-216},{-160,-216},{-160,290},{-122,290}}, color={255,0,
           255}));
+  connect(conVAVCor.yDam, cor.yVAV) annotation (Line(points={{552,48},{558,48},
+          {558,50},{566,50}}, color={0,0,127}));
   annotation (
     Diagram(coordinateSystem(preserveAspectRatio=false,extent={{-380,-320},{1400,
             680}})),
@@ -814,4 +814,4 @@ This is for
         InlineMethod=1,
         InlineOrder=2,
         InlineFixedStep=0.01)));
-end SystemForMPC_1bInput_modeSignal;
+end SystemForMPC_1iInput_modeSignal;

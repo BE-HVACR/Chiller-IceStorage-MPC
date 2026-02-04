@@ -1,7 +1,7 @@
 within VirtualTestbed.NISTChillerTestbed.DemandFlexibilityInvestigation.FakeSystem.Validation;
 model SystemForMPC_1bInput_modeSignal
   extends Modelica.Icons.Example;
-  VirtualTestbed.NISTChillerTestbed.DemandFlexibilityInvestigation.FakeSystem.SystemForMPC_1bInput_modeSignal
+  VirtualTestbed.NISTChillerTestbed.DemandFlexibilityInvestigation.FakeSystem.SystemForMPC_1iInput_modeSignal
     tesBed annotation (Placement(transformation(extent={{-10,-12},{10,8}})));
   Modelica.Math.Random.Examples.GenerateRandomNumbers generateRandomNumbers(
       samplePeriod=1*60*60, localSeed=61000)

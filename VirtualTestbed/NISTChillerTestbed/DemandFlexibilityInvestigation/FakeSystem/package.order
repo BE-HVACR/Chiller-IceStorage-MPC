@@ -1,7 +1,8 @@
 SystemForMPC_2b3rInputs
 SystemForMPC_2bInputs
 SystemForMPC_2bInputs_RealtoBool
-SystemForMPC_1bInput_modeSignal
+SystemForMPC_1iInput_modeSignal
+SystemForMPC_2iInput_modeSignal_Vcore
 Controls
 ThermalZones
 Validation
