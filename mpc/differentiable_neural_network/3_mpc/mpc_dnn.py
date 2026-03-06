@@ -50,7 +50,9 @@ class mpc_case():
         self.u_start = [-1]*self.PH # total number of control variables
         self.u_ini_fix = [-1]*self.PH # total number of control variables
         self.number_inputs = 1 # [uMod]
-        self.w = [1., 1000., 1000.]  # weights in objective function: : Minimize energy cost + temperature violation + SOC penalty
+        self.w = [0.5, 0.5, 1000.]  # weights in objective function: : Minimize energy cost + temperature violation + SOC penalty
+        # The normalized energy cost and thermal comfort terms are combined with equal weights, w_{cost} = w_{comfort} = 0.5, 
+        # reflecting that this case study treats energy cost and comfort as equally important objectives. SOC term is commented out in the current version of the code, but it can be added back with a large weight (e.g., 1000) to prioritize SOC constraint satisfaction if needed.
         self.x_opt_0 = self.u_ub   # initialization of previous control actions
 
         # initialize zone arx model auto error term
@@ -252,11 +254,15 @@ class mpc_case():
             # #print(du_k_nom2)
 
             ## Objective Function: Minimize energy cost + temperature penalty + SOC penalty
-            fo = ( self.w[0] * (price_ph[k] * P_pred_ph[k] * self.dt/3600./1000.) )**2 + \
-                 ( self.w[1] * (delta_Thigh) )**2 #+\
+            # objective normalization: ∆E and ∆T are constant scaling factors used for normalizing two objectives
+            delta_E = 1.1 # average hourly energy cost (≈ $1.1) of the baseline case, which reflects a typical energy bill for this floor under the Time-of-Use tariff
+            delta_T = 1 # ∆T is set to 1 °C, corresponding to the allowable upward deviation above the comfort setpoint in this study
+            fo = ( self.w[0] * (price_ph[k] * P_pred_ph[k] * self.dt/3600./1000.) /delta_E )**2 + \
+                 ( self.w[1] * (delta_Thigh) /delta_T )**2 #+\
                  #( self.w[2] * (delta_SOClow) ) # * (2-ca.fabs(u[0])): occupied - mode 2 (charge chiller), no penalty for SOC; unoccupied: encourage mode -1 charging TES
                  #self.w[1] * u[-1]**2 #slack variable
-                 #self.w[2] * du_k_nom2
+                 #self.w[2] * du_k_nom2 #switching-penalty term or penalty on the slew rate of control signal 
+                 # Not activated: penalty for mode switching that considers equipment wear-and-tear in the objective function
             fval.append(fo)
         
         fval_sum = ca.sum1(ca.vertcat(*fval))

@@ -24,13 +24,13 @@ def run_tests(PH_values, mIce_max, SOC_ini):
 
 if __name__ == "__main__":
     # Define the list of PH values you want to test
-    PH_values = [2, 4, 8, 10, 12, 16, 20, 24, 32, 40, 48]
-    #PH_values = [24, 8, 1]
-    #PH_values = [1,] # used for calculate baseline RBC control (set lower bound of uMod = -1 during unoccupied to be storage-priority control)
-
+    #PH_values = [2, 4, 8, 10, 12, 16, 20, 24, 32, 40, 48]
+    PH_values = [20] # This is the optimal prediction horizon identified from the Applied Energy paper, which is a good balance between performance and computational efficiency for the NIST chiller testbed. It can be used for the main MPC control scenario in the paper.
+    #PH_values = [1,] # it can also be used for approximate baseline RBC control (set lower bound of uMod = -1 during unoccupied to be storage-priority control)
+    ## Note, for actual baseline RBC control, we should run it in Dymola of Modelica model (VirtualTestbed.NISTChillerTestbed.DemandFlexibilityInvestigation.HVAC_TES.Baseline_RBC) without MPC.
     # Set the constant values for mIce_max and SOC_ini
-    mIce_max = 3105*5.  # # 3105 L water per tank from NIST testbed, Trane Calmac Model 1082A
-    #mIce_max = 1550. # Trane Calmac Model 1045C
+    mIce_max = 3105*4.  # # 3105 L water per tank from NIST testbed, Trane Calmac Model 1082A (actual installed ice tank at NIST laboratory).
+    #mIce_max = 1550. # Another option: Trane Calmac Model 1045C
     SOC_ini = 0.5  # initial State-of-Charge
 
     # Run the tests with the defined PH values and constant parameters

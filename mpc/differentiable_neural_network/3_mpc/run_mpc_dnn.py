@@ -314,8 +314,8 @@ def run_mpc(PH=12, mIce_max=3105.*5, SOC_ini=0.5):
 
     ### 2. Experiment setup
     ## define simulation period
-    t_start = 212*24*3600+31*24*3600  # July 1st is Day181, August 1st is Day212, September 1st is Day 243, original test on Day 221
-    t_period = 2*24*3600.
+    t_start = 243*24*3600  # July 1st is Day181, August 1st is Day212, September 1st is Day 243
+    t_period = 2*24*3600. # simulate 2 days for each scenario, which is long enough to cover different time-of-use price periods and various weather conditions (e.g., sunny, cloudy, rainy) for testing the performance of MPC control under different scenarios. It can also be adjusted to simulate a longer period (e.g., 4 days) to cover more variations of weather conditions and price periods, but it will increase the computational time.
     t_end = t_start + t_period  # simulation end time
     te_warm = t_start + 1*3600.  # warm up time
     dt = 4*15*60.  # MPC timestep
