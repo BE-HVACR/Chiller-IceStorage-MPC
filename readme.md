@@ -7,6 +7,7 @@ The demo HVAC-TES Modelica model is located at `VirtualTestbed.NISTChillerTestbe
 The demo MPC controller is located at `mpc\differentiable_neural_network\3_mpc\manage_mpc_scenarios.py`
 
 Contact information:
-Guowen Li, PhD Candidate, guowenli@tamu.edu;
 Zheng O'Neill, Professor, zoneill@tamu.edu
+
+Reference: Li, Guowen, Zheng O’Neill, Yangyang Fu, and Amanda Pertzborn. "Neural network-based model predictive control for HVAC and ice storage in a high-fidelity virtual testbed." Applied Energy 415 (2026): 127891. DOI: https://doi.org/10.1016/j.apenergy.2026.127891
    
